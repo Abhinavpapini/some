@@ -1,0 +1,96 @@
+PRACTICAL QUESTIONS – DOCKER, KUBERNETES, GITHUB ACTIONS AND REST API
+================================================== Q1. DEPLOY A CONTAINERIZED APPLICATION ON KUBERNETES
+
+Aim: Build a Docker image, deploy the application on Kubernetes with 2 replicas, create a Service, and verify the resources.
+
+Files required:
+
+server.js
+package.json
+Dockerfile
+deployment.yaml
+service.yaml
+
+Step 1: Build the Docker image
+
+docker build -t student:latest .
+
+Step 2: Start Kubernetes using Minikube
+
+minikube start minikube image load student:latest
+
+Step 3: Create the Deployment and Service
+
+kubectl apply -f deployment.yaml kubectl apply -f service.yaml
+
+Step 4: Verify the resources
+
+kubectl get deployments kubectl get pods kubectl get services kubectl get all
+
+Expected result: The Deployment should show 2 ready replicas, two Pods should be running, and the student Service should exist.
+
+Step 5: Test the application
+
+kubectl port-forward service/student 3000:3000
+
+Keep this terminal open. Open another terminal and run:
+
+curl http://localhost:3000
+
+Expected output: Student App is Running!
+
+Result: The containerized application is deployed on Kubernetes with 2 replicas and a Service.
+
+================================================== Q2. CREATE A GITHUB ACTIONS WORKFLOW
+
+Aim: Create a GitHub Actions workflow to check out source code, install dependencies, perform a basic build check, and verify the workflow status.
+
+Files required:
+
+server.js
+package.json
+.github/workflows/main.yml
+
+Workflow file: .github/workflows/main.yml
+
+name: Node.js Build
+
+on: push: branches: [main] pull_request: branches: [main]
+
+jobs: build: runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout code
+    uses: actions/checkout@v4
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 20
+
+  - name: Install dependencies
+    run: npm install
+
+  - name: Build
+    run: npm run build
+
+
+Note: The package.json file must contain this build script:
+
+"build": "node --check server.js"
+
+Step 1: Initialize Git and push the code
+
+git init git add . git commit -m "Initial commit" git branch -M main git remote add origin https://github.com/USERNAME/REPOSITORY.git git push -u origin main
+
+Replace USERNAME and REPOSITORY with your GitHub username and repository name.
+
+Step 2: Verify the workflow
+
+Open your repository on GitHub.
+Click the Actions tab.
+Open the latest workflow run.
+Check that all steps show green check marks.
+
+Result: GitHub Actions automatically checks out the source code, installs dependencies, performs a build check, and displays the workflow status.
+
